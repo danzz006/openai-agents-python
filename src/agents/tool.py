@@ -1099,6 +1099,9 @@ def function_tool(
 
         async def _on_invoke_tool_impl(ctx: ToolContext[Any], input: str) -> Any:
             try:
+                ### for qwen-3.5
+                input = input.replace('"{', '{').replace('}"', '}').replace('\\', '')
+                ###
                 json_data: dict[str, Any] = json.loads(input) if input else {}
             except Exception as e:
                 if _debug.DONT_LOG_TOOL_DATA:
