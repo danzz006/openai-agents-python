@@ -1100,9 +1100,15 @@ def function_tool(
         async def _on_invoke_tool_impl(ctx: ToolContext[Any], input: str) -> Any:
             try:
                 ### for qwen-3.5
-                input = input.replace('"{', '{').replace('}"', '}').replace('\\', '')
-                ###
-                json_data: dict[str, Any] = json.loads(input) if input else {}
+                try:
+                    input = eval(input)
+                except Exception as ex:
+                    logger.debug(f"Could not eval input: {ex}")
+                if 'ex' in locals(): # fallback
+                    input = input.replace('"{', '{').replace('}"', '}').replace('\\', '')
+                    json_data: dict[str, Any] = json.loads(input) if input else {}
+                else:
+                    json_data: dict[str, Any] = input if input else {}
             except Exception as e:
                 if _debug.DONT_LOG_TOOL_DATA:
                     logger.debug(f"Invalid JSON input for tool {schema.name}")
