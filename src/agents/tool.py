@@ -1102,6 +1102,12 @@ def function_tool(
                 ### for qwen-3.5
                 try:
                     input = eval(input)
+                    for key, value in input.items():
+                        try:
+                            json_val = json.loads(value)
+                            input[key] = json_val
+                        except Exception as jx:
+                            pass
                 except Exception as ex:
                     logger.debug(f"Could not eval input: {ex}")
                 if 'ex' in locals(): # fallback
