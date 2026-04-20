@@ -1104,8 +1104,9 @@ def function_tool(
                     input = eval(input)
                     for key, value in input.items():
                         try:
-                            json_val = json.loads(value)
-                            input[key] = json_val
+                            if value[0] == '{':
+                                json_val = json.loads(value)
+                                input[key] = json_val
                         except Exception as jx:
                             pass
                 except Exception as ex:
